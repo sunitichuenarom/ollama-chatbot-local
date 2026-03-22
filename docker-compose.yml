@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   ollama:
     image: ollama/ollama:latest
@@ -27,6 +25,22 @@ services:
       - OLLAMA_BASE_URL=http://ollama:11434
     volumes:
       - open_webui_data:/app/backend/data
+    depends_on:
+      - ollama
+
+  openclaw:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw
+    restart: always
+    command: ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789", "--allow-unconfigured"]
+    environment:
+      - LLM_PROVIDER=ollama
+      - LLM_OLLAMA_BASE_URL=http://ollama:11434
+      - LLM_MODEL=qwen-coder
+    ports:
+      - "1312:18789"
+    volumes:
+      - ./openclaw-config:/home/node/.openclaw
     depends_on:
       - ollama
 
