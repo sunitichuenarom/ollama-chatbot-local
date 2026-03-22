@@ -230,6 +230,51 @@ docker exec openclaw openclaw devices approve <REQUEST_ID>
 
 กลับไปที่ browser กด **Connect** อีกครั้ง → เข้าใช้งานได้! 🎉
 
+
+---
+
+### 6. การเชื่อมต่อกับ Telegram (ทางเลือก)
+
+หากคุณต้องการใช้งาน OpenClaw ผ่าน Telegram ให้ทำตามขั้นตอนนี้:
+
+#### 6.1 สร้าง Bot และรับ Token
+1. ค้นหา `@BotFather` ใน Telegram
+2. ส่งคำสั่ง `/newbot` และทำตามขั้นตอนเพื่อสร้างบอทใหม่
+3. คุณจะได้ **API Token** (ตัวอย่าง: `1234567890:ABCdef...`)
+
+#### 6.2 แก้ไข Config
+เปิดไฟล์ `openclaw-config/openclaw.json` และเพิ่มส่วน `channels` (ผมได้เตรียม placeholder ไว้ให้แล้ว):
+
+```json
+  "channels": {
+    "telegram": {
+      "botToken": "ใส่_TOKEN_ของคุณที่นี่"
+    }
+  }
+```
+
+#### 6.3 Restart OpenClaw
+รันคำสั่งเพื่อให้ OpenClaw โหลด config ใหม่:
+```bash
+docker compose restart openclaw
+```
+
+#### 6.4 การ Pairing กับ Telegram
+1. เข้าไปที่บอทของคุณใน Telegram แล้วเริ่มคุย (กด **Start**)
+2. ส่งข้อความใดก็ได้ (เช่น "สวัสดี")
+3. OpenClaw จะขอให้คุณ Approve การเชื่อมต่อ
+4. รันคำสั่งเพื่อดูคำขอ Pairing:
+   ```bash
+   docker exec openclaw openclaw pairing list telegram
+   ```
+6. Approve การเชื่อมต่อ:
+   ```bash
+   # ตัวอย่างรหัสที่ได้จากบอท
+   docker exec openclaw openclaw pairing approve telegram 7J3XJQK9
+   ```
+
+ตอนนี้คุณก็สามารถคุยกับ Agent ผ่าน Telegram ได้แล้ว! 🎉
+
 ---
 
 ## 📖 เอกสารเพิ่มเติม
