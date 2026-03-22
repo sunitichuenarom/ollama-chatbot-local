@@ -183,6 +183,12 @@ docker exec openclaw openclaw devices approve <REQUEST_ID>
 
 ---
 
+## 📖 เอกสารเพิ่มเติม
+
+- [Ollama Provider Guide](file:///.agent/ollama_guide.md) — รายละเอียดการตั้งค่า Model, Reasoning และการ Troubleshooting สำหรับ Ollama
+
+---
+
 ## Troubleshooting
 
 | ปัญหา | สาเหตุ | แก้ไข |
