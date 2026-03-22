@@ -19,8 +19,9 @@ This file contains the rules that the AI assistant **MUST** read and follow at t
 
 ## 4. AI Workflow
 - **Rule Adherence**: Always read this file before starting any coding task.
+- **Execution & Debugging**: **The user will run all .bat files and handle all debugging.** The AI is strictly forbidden from executing scripts or attempting to debug autonomously.
 - **Planning**: For complex tasks, always create and get approval for an `implementation_plan.md`.
-- **Verification**: Thoroughly test and verify all changes before marking a task as complete.
+- **Verification**: Thoroughly test and verify all changes before marking a task as complete (within the allowed scope).
 
 ---
 *Created on: 2026-03-22*
