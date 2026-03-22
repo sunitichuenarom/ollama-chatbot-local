@@ -38,6 +38,39 @@ mkdir openclaw-config
 
 ```json
 {
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ollama/qwen3.5:9b"
+      }
+    }
+  },
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://ollama:11434",
+        "apiKey": "ollama-local",
+        "api": "ollama",
+        "models": [
+          {
+            "id": "qwen3.5:9b",
+            "name": "Qwen 3.5 9B",
+            "reasoning": false,
+            "input": ["text"],
+            "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+            "contextWindow": 32768,
+            "maxTokens": 32768
+          }
+        ]
+      }
+    }
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
   "gateway": {
     "mode": "local",
     "controlUi": {
@@ -48,7 +81,21 @@ mkdir openclaw-config
 }
 ```
 
-> **หมายเหตุ:** OpenClaw จะ generate `auth.token` เองอัตโนมัติตอน start ครั้งแรก
+> **หมายเหตุ:**
+> - OpenClaw จะ generate `auth.token` เองอัตโนมัติตอน start ครั้งแรก
+> - ชื่อ model ต้องใส่ provider prefix เสมอ เช่น `ollama/qwen3.5:9b` (ไม่ใช่แค่ `qwen3.5:9b`)
+> - `models` array ต้องเป็น **object** (ไม่ใช่ string) ตาม [OpenClaw Ollama Docs](https://docs.openclaw.ai/providers/ollama)
+
+#### สรุปโครงสร้าง Config ที่สำคัญ
+
+| Section | คำอธิบาย |
+|---------|----------|
+| `agents.defaults.model.primary` | ชื่อ model หลักที่ OpenClaw ใช้ (ต้องมี prefix `ollama/`) |
+| `models.providers.ollama.baseUrl` | URL ของ Ollama service ภายใน Docker network |
+| `models.providers.ollama.apiKey` | ใช้ค่า `"ollama-local"` สำหรับ Ollama ที่รันใน local |
+| `models.providers.ollama.api` | ระบุ `"ollama"` เพื่อใช้ native API (ไม่ใช่ OpenAI-compatible) |
+| `models.providers.ollama.models` | array ของ model objects ที่ระบุ id, contextWindow, maxTokens ฯลฯ |
+| `gateway.controlUi` | ตั้งค่าเพื่อให้เข้าถึง UI ผ่าน Docker port forwarding ได้ |
 
 ---
 
@@ -90,10 +137,6 @@ services:
     container_name: openclaw
     restart: always
     command: ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789", "--allow-unconfigured"]
-    environment:
-      - LLM_PROVIDER=ollama
-      - LLM_OLLAMA_BASE_URL=http://ollama:11434
-      - LLM_MODEL=qwen-coder
     ports:
       - "1312:18789"
     volumes:
@@ -105,6 +148,9 @@ volumes:
   ollama_data:
   open_webui_data:
 ```
+
+> **⚠️ ไม่จำเป็นต้องใช้ environment variables (`LLM_PROVIDER`, `LLM_MODEL` ฯลฯ)**
+> OpenClaw อ่าน config จาก `openclaw.json` โดยตรง การตั้งค่า model/provider ทั้งหมดอยู่ในไฟล์ config
 
 > **⚠️ สิ่งสำคัญเกี่ยวกับ OpenClaw config:**
 >
@@ -131,8 +177,11 @@ docker compose up -d
 ### 4. Pull Model ใน Ollama (ถ้ายังไม่มี)
 
 ```bash
-docker exec ollama ollama pull qwen-coder
+# ต้องตรงกับ model id ที่ระบุใน openclaw.json
+docker exec ollama ollama pull qwen3.5:9b
 ```
+
+> **สำคัญ:** ชื่อ model ที่ pull ต้องตรงกับ `id` ใน `models.providers.ollama.models` ของ `openclaw.json`
 
 ---
 
@@ -199,6 +248,10 @@ docker exec openclaw openclaw devices approve <REQUEST_ID>
 | `pairing required` | Device ยังไม่ได้ approve | รัน `openclaw devices list` แล้ว `approve` |
 | `token_missing` | ไม่ได้ใส่ token ใน UI | ดู token จาก `openclaw dashboard --no-open` |
 | Gateway ยังฟังที่ `127.0.0.1` | ไม่ได้ override command | ต้องเพิ่ม `command` ใน docker-compose.yml |
+| `Unknown model: anthropic/xxx` | ชื่อ model ไม่มี prefix `ollama/` | แก้ `agents.defaults.model.primary` เป็น `ollama/<model_id>` |
+| `models.providers.ollama.models: expected array` | ไม่มี `models` array ใน config | เพิ่ม `models` array ใน `models.providers.ollama` |
+| `models.providers.ollama.models.0: expected object` | models เป็น string แทน object | แต่ละ model ต้องเป็น object `{id, name, contextWindow, ...}` |
+| `Config invalid` ซ้ำๆ | โครงสร้าง config ผิดที่ | Provider config ต้องอยู่ที่ `models.providers` (top-level) ไม่ใช่ `agents.defaults.providers` |
 
 ---
 
@@ -207,8 +260,31 @@ docker exec openclaw openclaw devices approve <REQUEST_ID>
 ```
 AI-chat-docker/
 ├── docker-compose.yml
+├── OPENCLAW-SETUP.md          ← เอกสาร setup guide นี้
+├── Modelfile                  ← Ollama model config
 ├── openclaw-config/
-│   └── openclaw.json          ← OpenClaw gateway config
+│   └── openclaw.json          ← OpenClaw config (agents + models + gateway)
+├── .agent/
+│   ├── scripts/
+│   │   └── log-openclaw.bat   ← สคริปต์ดึง log จาก OpenClaw container
+│   ├── logs/
+│   │   └── log.txt            ← ไฟล์ log ล่าสุดจาก OpenClaw
+│   ├── rules.md               ← กฎการทำงานร่วมกับ AI
+│   ├── skills.md              ← รายการ skills
+│   └── ollama_guide.md        ← คู่มือ Ollama
 ├── ollama_data/               ← Ollama model data (Docker volume)
 └── webui_data/                ← Open WebUI data (Docker volume)
 ```
+
+---
+
+## Log Script
+
+ใช้สคริปต์ `.agent/scripts/log-openclaw.bat` เพื่อดึง log จาก OpenClaw container:
+
+```bash
+# รันจากโฟลเดอร์ .agent/scripts/
+log-openclaw.bat
+```
+
+Log จะถูกเขียนทับที่ `.agent/logs/log.txt` ทุกครั้งที่รัน

@@ -1,45 +1,26 @@
-2026-03-22T05:51:43.264+00:00 Config overwrite: /home/node/.openclaw/openclaw.json (sha256 164d9cf6d9ddd496bf545948585206a86e4259420777700257ad36df2a5dc754 -> f0f41304314bae3daa880c27d947005aac0fdb331c9d44998b9ec133efb5c6e6, backup=/home/node/.openclaw/openclaw.json.bak)
+Invalid config at /home/node/.openclaw/openclaw.json:\n- models.providers.ollama.models.0: Invalid input: expected object, received string
+│
+◇  Config ───────────────────────────────────────────────────╮
+│                                                            │
+│  Config invalid; doctor will run with best-effort config.  │
+│                                                            │
+├────────────────────────────────────────────────────────────╯
+Config invalid
+File: ~/.openclaw/openclaw.json
+Problem:
+  - models.providers.ollama.models.0: Invalid input: expected object, received string
 
-2026-03-22T05:51:43.274+00:00 Config write anomaly: /home/node/.openclaw/openclaw.json (missing-meta-before-write)
+Run: openclaw doctor --fix
+Invalid config at /home/node/.openclaw/openclaw.json:\n- models.providers.ollama.models.0: Invalid input: expected object, received string
+│
+◇  Config ───────────────────────────────────────────────────╮
+│                                                            │
+│  Config invalid; doctor will run with best-effort config.  │
+│                                                            │
+├────────────────────────────────────────────────────────────╯
+Config invalid
+File: ~/.openclaw/openclaw.json
+Problem:
+  - models.providers.ollama.models.0: Invalid input: expected object, received string
 
-2026-03-22T05:51:43.280+00:00 [gateway] auth token was missing. Generated a new token and saved it to config (gateway.auth.token).
-
-2026-03-22T05:51:43.303+00:00 [canvas] host mounted at http://0.0.0.0:18789/__openclaw__/canvas/ (root /home/node/.openclaw/canvas)
-
-2026-03-22T05:51:43.306+00:00 [gateway] ⚠️  Gateway is binding to a non-loopback address. Ensure authentication is configured before exposing to public networks.
-
-2026-03-22T05:51:43.308+00:00 [gateway] ⚠️  gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true is enabled. Host-header origin fallback weakens origin checks and should only be used as break-glass.
-
-2026-03-22T05:51:43.356+00:00 [heartbeat] started
-
-2026-03-22T05:51:43.360+00:00 [health-monitor] started (interval: 300s, startup-grace: 60s, channel-connect-grace: 120s)
-
-2026-03-22T05:51:43.363+00:00 [gateway] agent model: anthropic/claude-opus-4-6
-
-2026-03-22T05:51:43.366+00:00 [gateway] listening on ws://0.0.0.0:18789 (PID 1)
-
-2026-03-22T05:51:43.370+00:00 [gateway] log file: /tmp/openclaw/openclaw-2026-03-22.log
-
-2026-03-22T05:51:43.373+00:00 [gateway] security warning: dangerous config flags enabled: gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true. Run `openclaw security audit`.
-
-2026-03-22T05:51:43.398+00:00 [browser/server] Browser control listening on http://127.0.0.1:18791/ (auth=token)
-
-2026-03-22T05:51:51.819+00:00 [ws] security warning: websocket origin accepted via Host-header fallback conn=7fb8ca6d-90ac-412d-b77d-856bf259e6d3 count=1 host=localhost:1312 origin=http://localhost:1312
-
-2026-03-22T05:51:51.822+00:00 [gateway] security metric: gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback accepted a websocket connect request
-
-2026-03-22T05:51:51.826+00:00 [ws] unauthorized conn=7fb8ca6d-90ac-412d-b77d-856bf259e6d3 remote=172.18.0.1 client=openclaw-control-ui webchat v2026.3.13 reason=token_missing
-
-2026-03-22T05:51:51.833+00:00 [ws] closed before connect conn=7fb8ca6d-90ac-412d-b77d-856bf259e6d3 remote=172.18.0.1 fwd=n/a origin=http://localhost:1312 host=localhost:1312 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 code=1008 reason=unauthorized: gateway token missing (open the dashboard URL and paste the token in Control UI settings)
-
-2026-03-22T05:52:56.314+00:00 [ws] security warning: websocket origin accepted via Host-header fallback conn=558ae77b-b131-47f5-a4b5-cba09b77622a count=2 host=localhost:1312 origin=http://localhost:1312
-
-2026-03-22T05:52:56.318+00:00 [gateway] security metric: gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback accepted a websocket connect request
-
-2026-03-22T05:52:56.337+00:00 [ws] closed before connect conn=558ae77b-b131-47f5-a4b5-cba09b77622a remote=172.18.0.1 fwd=n/a origin=http://localhost:1312 host=localhost:1312 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 code=1008 reason=pairing required
-
-2026-03-22T05:53:16.876+00:00 [ws] security warning: websocket origin accepted via Host-header fallback conn=5ddaba4a-e891-4346-bf72-738886af6d24 count=3 host=localhost:1312 origin=http://localhost:1312
-
-2026-03-22T05:53:16.880+00:00 [gateway] security metric: gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback accepted a websocket connect request
-
-2026-03-22T05:53:16.898+00:00 [ws] closed before connect conn=5ddaba4a-e891-4346-bf72-738886af6d24 remote=172.18.0.1 fwd=n/a origin=http://localhost:1312 host=localhost:1312 ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 code=1008 reason=pairing required
+Run: openclaw doctor --fix
