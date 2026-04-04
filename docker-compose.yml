@@ -44,6 +44,24 @@ services:
     depends_on:
       - ollama
 
+  openclaw-chat:
+    build:
+      context: ./openclaw-chat
+      dockerfile: Dockerfile
+    container_name: openclaw-chat
+    restart: always
+    ports:
+      - "1313:3000"
+    environment:
+      - OPENCLAW_API_URL=http://openclaw:18789/v1/chat/completions
+      - OPENCLAW_AUTH_TOKEN=650df9f5ce310e504cb24038120e7d6fa1ad68763aec7e5a
+      - OPENCLAW_MODEL=qwen3.5:9b
+      - OPENCLAW_MAX_CONTEXT_TOKENS=32768
+      - OPENCLAW_MAX_INPUT_TOKENS=20000
+      - NEXT_PUBLIC_MAX_INPUT_TOKENS=20000
+    depends_on:
+      - openclaw
+
 volumes:
   ollama_data:
   open_webui_data:

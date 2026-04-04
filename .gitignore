@@ -1,3 +1,5 @@
 /ollama_data
 /webui_data
 /openclaw-config
+/openclaw-chat/node_modules
+/openclaw-chat/.next
